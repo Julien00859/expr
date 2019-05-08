@@ -1,0 +1,53 @@
+OR: "or"i
+AND: "and"i
+NOT: "not"i
+
+COMPOP: "==" | "!=" | "<" | "<=" | ">" | ">="
+
+OROP: "|"
+XOROP: "^"
+ANDOP: "&"
+SHIFTOP: "<<" | ">>"
+NEGOP: "~"
+
+SIGNOP: "+" | "-"
+TERMOP: "+" | "-"
+FACTOP: "*" | "/" | "%"
+POWEROP: "**"
+
+BOOLEAN: "true" | "false"
+
+HEX_DIGIT: /[0-9a-f]/i
+DEC_DIGIT: /[0-9]/
+OCT_DIGIT: /[0-7]/
+BIN_DIGIT: /[01]/
+
+expression: logical_or
+
+logical_or: [logical_or OR] logical_and
+logical_and: [logical_and AND] logical_not
+logical_not: NOT logical_not  | comparison
+
+comparison: [comparison COMPOP] bitwise_or
+
+bitwise_or: [bitwise_or OROP] bitwise_xor
+bitwise_xor: [bitwise_xor XOROP] bitwise_and
+bitwise_and: [bitwise_and ANDOP] bitwise_shift
+bitwise_shift: bitwise_neg [SHIFTOP bitwise_neg]
+bitwise_neg: NEGOP bitwise_neg | arith_sign
+
+arith_sign: SIGNOP arith_sign | arith_term
+arith_term: [arith_term TERMOP] arith_fact
+arith_fact: [arith_fact FACTOP] arith_power
+arith_power: parenthesis [POWEROP parenthesis]
+
+parenthesis: "(" expression ")" | atomic_value
+atomic_value: number | BOOLEAN
+
+number: hex_number | dec_number | oct_number | bin_number
+hex_number: "x"i HEX_DIGIT+
+dec_number: DEC_DIGIT+
+oct_number: "o"i OCT_DIGIT+
+bin_number: "b"i BIN_DIGIT+
+
+%ignore " "
