@@ -28,7 +28,7 @@ def eval_booleans(tree):
     logger.debug("Evaluating booleans...")
     for boolean in tree.find_data("boolean"):
         boolean.meta.type = bool
-        boolean.meta.value = boolean.children[0].value == "true"
+        boolean.meta.value = boolean.children[0].type == "TRUE"
         boolean.children = []
 
 

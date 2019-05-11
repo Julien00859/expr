@@ -1,6 +1,6 @@
-OR: "or"
-AND: "and"
-NOT: "not"
+OR: "or"i
+AND: "and"i
+NOT_: "not"i
 
 EQ: "=="
 NE: "!="
@@ -25,8 +25,8 @@ FLOORDIV: "/"
 MOD: "%"
 POW: "**"
 
-TRUE: "true"
-FALSE: "false"
+TRUE: "true"i
+FALSE: "false"i
 
 HEX_DIGIT: /[0-9a-f]/i
 DEC_DIGIT: /[0-9]/
@@ -37,7 +37,7 @@ expression: logical_or
 
 logical_or: [logical_or OR] logical_and
 logical_and: [logical_and AND] logical_not
-logical_not: NOT logical_not | comparison
+logical_not: NOT_ logical_not | comparison
 
 comparison: [comparison compop] bitwise_or
 

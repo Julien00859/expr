@@ -2,13 +2,26 @@ import operator
 from logging import getLogger
 from lark.lexer import Token
 
-
 logger = getLogger(__name__)
 
-def get_token(node):
-    while not isinstance(node, Token):
-        node = node.children[0]
-    return node
+
+def logic_and(a, b):
+    return a and b
+
+
+def logic_or(a, b):
+    return a or b
+
+
+def get_op(op_name):
+    if op_name == "and":
+        return logic_and
+    elif op_name == "or":
+        return logic_or
+    return getattr(operator, op_name)
+
+
+
 
 def compute(tree):
     logger.debug("Computing...")
@@ -19,10 +32,10 @@ def compute(tree):
             if not isinstance(node.children[0], Token):
                 node.meta.value = node.children[0].meta.value
         elif len(node.children) == 2:
-            op = getattr(operator, get_token(node.children[0]).type.lower())
+            op = get_op(get_token(node.children[0]).type.lower())
             node.meta.value = op(node.children[1].meta.value)
         else:
-            op = getattr(operator, get_token(node.children[1]).type.lower())
+            op = get_op(get_token(node.children[1]).type.lower())
             node.meta.value = op(node.children[0].meta.value,
                                  node.children[2].meta.value)
     logger.debug("Done!")
