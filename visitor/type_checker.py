@@ -1,41 +1,8 @@
 from logging import getLogger
 from lark.lexer import Token
+from utils import get_token
 
 logger = getLogger(__name__)
-
-orders = {
-    "hex_number": 16,
-    "dec_number": 10,
-    "oct_number": 8,
-    "bin_number": 2,
-}
-values = {l: v for v, l in enumerate("0123456789abcdef")}
-
-
-def eval_numbers(tree):
-    logger.debug("Evaluating numbers...")
-    for number in tree.find_data("number"):
-        unit = orders[number.children[0].data]
-        number.meta.type = int
-        number.meta.value = 0
-        for digit in number.children[0].children:
-            number.meta.value *= unit
-            number.meta.value += values[digit.value.lower()]
-        number.children = []
-
-
-def eval_booleans(tree):
-    logger.debug("Evaluating booleans...")
-    for boolean in tree.find_data("boolean"):
-        boolean.meta.type = bool
-        boolean.meta.value = boolean.children[0].type == "TRUE"
-        boolean.children = []
-
-
-def _get_token(node):
-    while not isinstance(node, Token):
-        node = node.children[0]
-    return node
 
 
 class TypeError_(TypeError):
@@ -69,9 +36,9 @@ def _require_type(children, type_):
             continue
 
         if len(children) == 2:
-            raise TypeError_(_get_token(children[0]).value, children[1])
+            raise TypeError_(get_token(children[0]).value, children[1])
         elif len(children) == 3:
-            raise TypeError_(_get_token(children[1]).value, children[0], children[2])
+            raise TypeError_(get_token(children[1]).value, children[0], children[2])
 
 
 def type_checker(tree):
@@ -92,4 +59,3 @@ def type_checker(tree):
         elif node.data.startswith("arith"):
             node.meta.type = int
             _require_type(node.children, int)
-

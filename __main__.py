@@ -1,22 +1,23 @@
 #!/usr/bin/env python3
 
 import logging
+import sys
 from argparse import ArgumentParser
 
-cli = ArgumentParser()
+cli = ArgumentParser(description=(
+    "REPL that compute logical, bitwise and arithmetic expressions."))
 cli.add_argument("-v", "--verbose", dest="loglevel", action="store_const",
         default=logging.INFO, const=logging.DEBUG,
         help="Verbose debug mode.")
-cli.add_argument("-c", "--expr", dest="expr", action="store",
+cli.add_argument("-c", dest="expr", action="store",
         help="Evaluate the expression and exit.")
 options = cli.parse_args()
 logging.basicConfig(level=options.loglevel)
 logger = logging.getLogger()
 
-import sys
+from lark.exceptions import LarkError
+import visitor
 from parser import parser
-from visitor import eval_numbers, eval_booleans, type_checker
-from compute import compute
 
 
 def repl():
@@ -32,16 +33,16 @@ def repl():
             break
         try:
             print(eval(expr))
-        except TypeError as exc:
+        except (TypeError, LarkError) as exc:
             print(exc, file=sys.stderr)
 
 
 def eval(expr):
     tree = parser.parse(expr)
-    eval_numbers(tree)
-    eval_booleans(tree)
-    type_checker(tree)
-    compute(tree)
+    visitor.eval_numbers(tree)
+    visitor.eval_booleans(tree)
+    visitor.type_checker(tree)
+    visitor.compute(tree)
     return tree.meta.value
 
 
@@ -49,4 +50,3 @@ if options.expr:
     print(eval(options.expr))
 else:
     repl()
-
