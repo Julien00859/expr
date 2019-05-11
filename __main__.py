@@ -20,8 +20,7 @@ from compute import compute
 
 
 def repl():
-    print("Welcome to this very simple REPL.")
-    print("Press CTRL+D to quit.")
+    print("Use exit() or Ctrl-D (i.e. EOF) to exit")
     while True:
         try:
             expr = input("? ")
@@ -29,7 +28,10 @@ def repl():
             break
         if not expr:
             continue
+        if expr.rstrip("()") in ["quit", "exit"]:
+            break
         print(eval(expr))
+
 
 def eval(expr):
     tree = parser.parse(expr)
