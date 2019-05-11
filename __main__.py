@@ -13,7 +13,7 @@ options = cli.parse_args()
 logging.basicConfig(level=options.loglevel)
 logger = logging.getLogger()
 
-
+import sys
 from parser import parser
 from visitor import eval_numbers, eval_booleans, type_checker
 from compute import compute
@@ -30,7 +30,10 @@ def repl():
             continue
         if expr.rstrip("()") in ["quit", "exit"]:
             break
-        print(eval(expr))
+        try:
+            print(eval(expr))
+        except TypeError as exc:
+            print(exc, file=sys.stderr)
 
 
 def eval(expr):

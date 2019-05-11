@@ -32,6 +32,33 @@ def eval_booleans(tree):
         boolean.children = []
 
 
+def _get_token(node):
+    while not isinstance(node, Token):
+        node = node.children[0]
+    return node
+
+
+class TypeError_(TypeError):
+    msg1 = "unsupported operand type for {}: {}."
+    msg2 = "unsupported operand types for {}: {} and {}."
+    def __init__(self, op, child1, child2=None):
+        type1 = TypeError_.type_to_str(child1.meta.type)
+        if child2:
+            type2 = TypeError_.type_to_str(child2.meta.type)
+            msg = TypeError_.msg2.format(op, type1, type2)
+        else:
+            msg = TypeError_.msg1.format(op, type1)
+        super().__init__(msg)
+
+    @staticmethod
+    def type_to_str(type_):
+        if type_ is int:
+            return 'int'
+        if type_ is bool:
+            return 'bool'
+        return 'unknown'
+
+
 def _require_type(children, type_):
     for child in children:
         if isinstance(child, Token):
@@ -41,8 +68,10 @@ def _require_type(children, type_):
         if child.meta.type == type_:
             continue
 
-        raise TypeError("Child {} is type {} but type {} is required.".format(
-            child, child.meta.type, type_))
+        if len(children) == 2:
+            raise TypeError_(_get_token(children[0]).value, children[1])
+        elif len(children) == 3:
+            raise TypeError_(_get_token(children[1]).value, children[0], children[2])
 
 
 def type_checker(tree):
