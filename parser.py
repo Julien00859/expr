@@ -1,11 +1,12 @@
 from logging import getLogger
+from os.path import dirname, join as pathjoin
 from lark import Lark
 
 logger = getLogger(__name__)
 
-logger.info("Loading grammar...")
-with open("grammar.lark") as fd:
+logger.debug("Loading grammar...")
+with open(pathjoin(dirname(__file__), "grammar.lark")) as fd:
     gram = fd.read()
 
 parser = Lark(gram, parser="lalr", start="expression", debug=True)
-logger.info("Loaded.")
+logger.debug("Loaded.")
