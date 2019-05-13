@@ -33,8 +33,11 @@ def repl():
             break
         try:
             print(eval(expr))
-        except (TypeError, LarkError) as exc:
-            print(exc, file=sys.stderr)
+        except (ArithmeticError, TypeError) as exc:
+            print("error:", exc, file=sys.stderr)
+        except LarkError as exc:
+            print("syntax error:", expr)
+            print(" " * (12 + exc.column), "^", file=sys.stderr)
 
 
 def eval(expr):
