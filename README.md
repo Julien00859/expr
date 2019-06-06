@@ -3,7 +3,6 @@ expr
 
 A simple engine built to compute logical, bitwise and arithmetic expressions.
 
-
 	usage: expr [-h] [-v] [-c EXPR]
 
 	optional arguments:
