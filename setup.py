@@ -13,6 +13,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/Julien00859/expr",
     packages=setuptools.find_packages(),
+    install_requires=["lark-parser"],
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Environment :: Console",
