@@ -5,7 +5,7 @@ with open("README.md", "r") as fd:
 
 setuptools.setup(
     name="expr",
-    version="1.0.1",
+    version="1.0.2",
     author="Julien Castiaux",
     author_email="julien.castiaux@gmail.com",
     description="A simple engine built to compute logical, bitwise and arithmetic expressions",

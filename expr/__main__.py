@@ -3,6 +3,7 @@
 import logging
 import sys
 from argparse import ArgumentParser
+from lark.exceptions import LarkError
 
 cli = ArgumentParser(description=(
     "REPL that compute logical, bitwise and arithmetic expressions."))
@@ -15,9 +16,7 @@ options = cli.parse_args()
 logging.basicConfig(level=options.loglevel)
 logger = logging.getLogger()
 
-from lark.exceptions import LarkError
-import visitor
-from parser import parser
+from .eval import eval
 
 
 def repl():
@@ -38,16 +37,6 @@ def repl():
         except LarkError as exc:
             print("syntax error:", expr)
             print(" " * (12 + exc.column), "^", file=sys.stderr)
-
-
-def eval(expr):
-    tree = parser.parse(expr)
-    visitor.eval_numbers(tree)
-    visitor.eval_booleans(tree)
-    visitor.type_checker(tree)
-    visitor.compute(tree)
-    return tree.meta.value
-
 
 if options.expr:
     print(eval(options.expr))
