@@ -3,9 +3,12 @@ import setuptools
 with open("README.md", "r") as fd:
     long_description = fd.read()
 
+with open("VERSION", "r") as fd:
+    version = fd.read().strip()
+
 setuptools.setup(
     name="expr",
-    version="1.0.2",
+    version=version,
     author="Julien Castiaux",
     author_email="julien.castiaux@gmail.com",
     description="A simple engine built to compute logical, bitwise and arithmetic expressions",

@@ -1,6 +1,6 @@
 from logging import getLogger
 from lark.lexer import Token
-from ..utils import get_token
+from expr.utils import get_token
 
 logger = getLogger(__name__)
 
